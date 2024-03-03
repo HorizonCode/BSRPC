@@ -14,12 +14,12 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   const currentTimeDate = new Date(0);
   currentTimeDate.setSeconds(response.time);
 
-  const formattedCurrentTime = currentTimeDate.toISOString().substring(14, 5);
+  const formattedCurrentTime = currentTimeDate.toISOString().substring(11, 16);
 
   const endTimeDate = new Date(0);
   endTimeDate.setSeconds(response.endTime);
 
-  const formattedEndTime = endTimeDate.toISOString().substring(14, 5);
+  const formattedEndTime = endTimeDate.toISOString().substring(11, 16);
 
   updatePresence({
     details: isPlaying
@@ -38,9 +38,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   const port = process.env["ST_PORT"] ?? "";
 
   if (host.length <= 0 || port.length <= 0) {
-    console.log(
-      "You must set the QUEST_IP and ST_PORT environment variables."
-    );
+    console.log("You must set the QUEST_IP and ST_PORT environment variables.");
     process.exit(0);
   }
 
