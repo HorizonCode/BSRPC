@@ -1,5 +1,3 @@
-Sure, here's a basic README for your Discord presence program for Beat Saber using the Streamer Tools Mod:
-
 # BSRPC - Beat Saber Discord Presence
 
 This program allows you to display your current Beat Saber gameplay status on Discord using the Streamer Tools Mod for the Quest version of Beat Saber.
