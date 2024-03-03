@@ -19,8 +19,6 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   const endTimeDate = new Date(0);
   endTimeDate.setSeconds(response.endTime);
 
-  console.log(endTimeDate.toISOString());
-
   const formattedEndTime = endTimeDate.toISOString().substring(14, 19);
 
   updatePresence({
