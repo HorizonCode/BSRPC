@@ -1,0 +1,40 @@
+export type StreamerToolsDataResponse = {
+  location: number;
+  isPractice: boolean;
+  paused: boolean;
+  time: number;
+  endTime: number;
+  score: number;
+  rank: string;
+  combo: number;
+  energy: number;
+  accuracy: number;
+  levelName: string;
+  levelSubName: string;
+  levelAuthor: string;
+  songAuthor: string;
+  id: string;
+  difficulty: number;
+  bpm: number;
+  njs: number;
+  players: number;
+  maxPlayers: number;
+  mpGameId: string;
+  mpGameIdShown: boolean;
+  goodCuts: number;
+  badCuts: number;
+  missedNotes: number;
+  fps: number;
+  configFetched: boolean;
+  coverFetchable: boolean;
+};
+
+export type StreamerToolsInfoResponse = {
+  ModID: string;
+  ModVersion: string;
+  Socket: string;
+  HTTP: string;
+  Socketv6: string;
+  HTTPv6: string;
+  GameVersion: string;
+};
