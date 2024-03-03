@@ -1,6 +1,6 @@
 import ora from "ora";
 import { connectIPC, updatePresence } from "./rpc.js";
-import { getStreamerToolData, intToDiff } from "./questUtil.js";
+import { getStreamerToolData, intToDiff, locationToString } from "./questUtil.js";
 import { StreamerToolsDataResponse } from "./types.js";
 import { config } from "dotenv";
 
@@ -9,7 +9,7 @@ config();
 let retries = 3;
 
 const updateRPC = async (response: StreamerToolsDataResponse) => {
-  const isPlaying = response.location != 0;
+  const isPlaying = response.location == 1;
 
   const currentTimeDate = new Date(0);
   currentTimeDate.setSeconds(response.time);
@@ -32,7 +32,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
       ? `${response.songAuthor} - ${response.levelName} [${intToDiff(
           response.difficulty
         )}]`
-      : "Browsing in Song-Selector..."
+      : `Browsing in ${locationToString(response.location)}...`
   });
 };
 

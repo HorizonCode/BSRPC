@@ -46,3 +46,14 @@ export const intToDiff = (diff: number): string => {
   }
   return "Unknown";
 };
+
+export const locationToString = (loc: number): string => {
+  switch (loc) {
+    case 0:
+      return "Song Select";
+    case 1:
+      return "Playing";
+    case 6:
+      return "Settings";
+  }
+};
