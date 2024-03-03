@@ -9,7 +9,7 @@ config();
 let retries = 3;
 
 const updateRPC = async (response: StreamerToolsDataResponse) => {
-  const isPlaying = response.endTime > 0 && response.energy > 0;
+  const isPlaying = response.location != 0;
 
   const currentTimeDate = new Date(0);
   currentTimeDate.setSeconds(response.time);
@@ -21,9 +21,12 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
 
   const formattedEndTime = endTimeDate.toISOString().substring(14, 19);
 
+
   updatePresence({
     details: isPlaying
-      ? `Playing... (${formattedCurrentTime}/${formattedEndTime})`
+      ? `${
+          response.paused ? "Paused" : "Playing..."
+        } (${formattedCurrentTime}/${formattedEndTime})`
       : "Idle...",
     state: isPlaying
       ? `${response.songAuthor} - ${response.levelName} [${intToDiff(
