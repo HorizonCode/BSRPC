@@ -14,12 +14,14 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   const currentTimeDate = new Date(0);
   currentTimeDate.setSeconds(response.time);
 
-  const formattedCurrentTime = currentTimeDate.toISOString().substring(11, 16);
+  const formattedCurrentTime = currentTimeDate.toISOString().substring(14, 19);
 
   const endTimeDate = new Date(0);
   endTimeDate.setSeconds(response.endTime);
 
-  const formattedEndTime = endTimeDate.toISOString().substring(11, 16);
+  console.log(endTimeDate.toISOString());
+
+  const formattedEndTime = endTimeDate.toISOString().substring(14, 19);
 
   updatePresence({
     details: isPlaying
