@@ -49,7 +49,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
     "Checking connection to Streamer Tools...",
   ).start();
 
-  let testStreamerToolData;
+  let testStreamerToolData: StreamerToolsDataResponse | undefined = undefined;
 
   try {
     testStreamerToolData = await getStreamerToolData({ host, port });
