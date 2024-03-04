@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/discord-rpc": "^4.0.8",
     "@types/dotenv": "^8.2.0",
     "@types/node": "^20.11.24",
     "tsx": "^4.7.1",

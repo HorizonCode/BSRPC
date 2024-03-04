@@ -41,10 +41,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
         )
       }]`
       : `Browsing in ${locationToString(response.location)}...`,
-    largeImageKey: isPlaying ? undefined : "beatsaber",
-    assets: {
-      large_image: isPlaying ? coverURL : undefined,
-    },
+    largeImageKey: isPlaying ? coverURL : "beatsaber",
   });
 };
 
