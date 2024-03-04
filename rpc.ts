@@ -31,7 +31,7 @@ export const updatePresence = (newData: Partial<Presence>) => {
     data[key] = newData[key] || emptyString;
   }
 
-  if (Date.now() - lastRPCUpdate <= 1000) return;
+  if (Date.now() - lastRPCUpdate <= 3000) return; // only update each 3 seconds
   lastRPCUpdate = Date.now();
   rpcClient.setActivity(data);
 };

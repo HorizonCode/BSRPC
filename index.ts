@@ -3,13 +3,16 @@ import { connectIPC, updatePresence } from "./rpc.js";
 import {
   getStreamerToolData,
   intToDiff,
-  locationToString,
+  locationToString
 } from "./questUtil.js";
 import { StreamerToolsDataResponse } from "./types.js";
 import { config } from "dotenv";
 import { getFormattedTimeFromSeconds } from "./timeUtil.js";
+import { getAlbumCoverFromSongName } from "./spotifyAPI.js";
 
 config();
+
+const imageCache = new Map<string, string>();
 
 let retries = 3;
 
@@ -20,31 +23,41 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
 
   //TODO: Add other actions, see location.ts
   const isCustomLevel = response.id.startsWith("custom_level_");
-  const useBeatsaverCover = response.coverFetchable && isCustomLevel;
-  const coverURL = useBeatsaverCover
-    ? `https://cdn.beatsaver.com/${
-      response.id.split("_", 3)[2].toLowerCase()
-    }.jpg`
-    : "beatsaber";
+  const useBeatsaverCover = response.coverFetchable;
+  let coverURL = undefined;
+
+  if (isCustomLevel) {
+    coverURL = useBeatsaverCover
+      ? `https://cdn.beatsaver.com/${response.id
+          .split("_", 3)[2]
+          .toLowerCase()}.jpg`
+      : "beatsaber";
+  } else {
+    if (imageCache.has(response.levelName)) {
+      coverURL = imageCache.get(response.levelName);
+    } else {
+      const fetchedCover = await getAlbumCoverFromSongName(
+        `${response.songAuthor} ${response.levelName}`
+      );
+      imageCache.set(response.levelName, fetchedCover ?? "beatsaber"); // use default as fallback
+    }
+  }
 
   updatePresence({
     details: isPlaying
       ? `${
-        response.paused ? "Paused" : "Playing..."
-      } (${formattedCurrentTime}/${formattedEndTime})`
+          response.paused ? "Paused" : "Playing..."
+        } (${formattedCurrentTime}/${formattedEndTime})`
       : "Idle...",
     state: isPlaying
-      ? `${response.songAuthor} - ${response.levelName} [${
-        intToDiff(
-          response.difficulty,
-        )
-      }]`
+      ? `${response.songAuthor} - ${response.levelName} [${intToDiff(
+          response.difficulty
+        )}]`
       : `Browsing in ${locationToString(response.location)}...`,
     largeImageKey: isPlaying ? coverURL : "beatsaber",
     smallImageKey: isPlaying && isCustomLevel ? "info" : undefined,
-    smallImageText: isPlaying && isCustomLevel
-      ? `Level by ${response.levelAuthor}`
-      : undefined,
+    smallImageText:
+      isPlaying && isCustomLevel ? `Map by ${response.levelAuthor}` : undefined
   });
 };
 
@@ -58,7 +71,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   }
 
   const firstInitCheck = ora(
-    "Checking connection to Streamer Tools...",
+    "Checking connection to Streamer Tools..."
   ).start();
 
   let testStreamerToolData: StreamerToolsDataResponse | undefined = undefined;
@@ -98,7 +111,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
     } catch {
       retries--;
       if (retries <= 0) process.exit(0);
-      console.log(`Error, retrying ${retries} more times...`);
+      console.log(`Lost connection to Streamer Tools, retrying ${retries} more times...`);
     }
   }, 1000 * 1);
 })();
