@@ -14,8 +14,6 @@ const data: Presence = {
   largeImageText: "Beat Saber",
   smallImageKey: "  ",
   smallImageText: "  ",
-  endTimestamp: undefined,
-  startTimestamp: Date.now(),
   instance: false,
 };
 
