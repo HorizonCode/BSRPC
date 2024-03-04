@@ -7,29 +7,37 @@ import {
 export const getStreamerToolData = async (opts: {
   host: string;
   port: string;
-}): Promise<StreamerToolsDataResponse> => {
-  const fetchReq = await fetch(`http://${opts.host}:${opts.port}/data`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  return await fetchReq.json();
+}): Promise<StreamerToolsDataResponse | undefined> => {
+  try {
+    const fetchReq = await fetch(`http://${opts.host}:${opts.port}/data`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      }
+    });
+    return await fetchReq.json();
+  } catch {
+    return undefined;
+  }
 };
 
 export const getStreamerTooInfo = async (opts: {
   host: string;
   port: string;
-}): Promise<StreamerToolsInfoResponse> => {
-  const fetchReq = await fetch(`http://${opts.host}:${opts.port}/data`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  return await fetchReq.json();
+}): Promise<StreamerToolsInfoResponse | undefined> => {
+  try {
+    const fetchReq = await fetch(`http://${opts.host}:${opts.port}/data`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      }
+    });
+    return await fetchReq.json();
+  } catch {
+    return undefined;
+  }
 };
 
 export const intToDiff = (diff: number): string => {

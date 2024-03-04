@@ -9,8 +9,14 @@ import { StreamerToolsDataResponse } from "./types.js";
 import { config } from "dotenv";
 import { getFormattedTimeFromSeconds } from "./timeUtil.js";
 import { getAlbumCoverFromSongName } from "./spotifyAPI.js";
+import path from "path";
+import { existsSync } from "fs";
+import chalk from "chalk";
+import { readFile } from "fs/promises";
+import { runSetup } from "./setup.js";
+import { Location } from "./location.js";
 
-config();
+const configFile = path.join(process.cwd(), "bsrpc.json");
 
 const imageCache = new Map<string, string>();
 
@@ -26,20 +32,22 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   const useBeatsaverCover = response.coverFetchable;
   let coverURL = undefined;
 
-  if (isCustomLevel) {
-    coverURL = useBeatsaverCover
-      ? `https://cdn.beatsaver.com/${response.id
-          .split("_", 3)[2]
-          .toLowerCase()}.jpg`
-      : "beatsaber";
-  } else {
-    if (imageCache.has(response.levelName)) {
-      coverURL = imageCache.get(response.levelName);
+  if (response.levelName && response.levelName.length > 0) {
+    if (isCustomLevel) {
+      coverURL = useBeatsaverCover
+        ? `https://cdn.beatsaver.com/${response.id
+            .split("_", 3)[2]
+            .toLowerCase()}.jpg`
+        : "beatsaber";
     } else {
-      const fetchedCover = await getAlbumCoverFromSongName(
-        `${response.songAuthor} ${response.levelName}`
-      );
-      imageCache.set(response.levelName, fetchedCover ?? "beatsaber"); // use default as fallback
+      if (imageCache.has(response.levelName)) {
+        coverURL = imageCache.get(response.levelName);
+      } else {
+        const fetchedCover = await getAlbumCoverFromSongName(
+          `${response.songAuthor} ${response.levelName}`
+        );
+        imageCache.set(response.levelName, fetchedCover ?? "beatsaber"); // use default as fallback
+      }
     }
   }
 
@@ -62,11 +70,21 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
 };
 
 (async () => {
-  const host = process.env["QUEST_IP"] ?? "";
-  const port = process.env["ST_PORT"] ?? "";
+  const configCheck = existsSync(configFile);
+  if (!configCheck) {
+    // TODO: setup
+    console.log(chalk.redBright("Running setup..."));
+    if (!(await runSetup(configFile))) return;
+  }
 
-  if (host.length <= 0 || port.length <= 0) {
-    console.log("You must set the QUEST_IP and ST_PORT environment variables.");
+  const configData = await readFile(configFile, "utf8");
+  const configJSON = JSON.parse(configData);
+
+  const host = configJSON["quest_ip"] ?? "";
+  const port = "53502";
+
+  if (host.length <= 0) {
+    console.log("You must set the quest_ip in the config file.");
     process.exit(0);
   }
 
@@ -99,19 +117,21 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   }
 
   // Update the RPC on init by just using the first test response.
-  updateRPC(testStreamerToolData);
+  if (testStreamerToolData) updateRPC(testStreamerToolData);
 
   setInterval(async () => {
     try {
       const response = await getStreamerToolData({ host, port });
-      updateRPC(response); // update the Discord RPC
+      if (response) updateRPC(response); // update the Discord RPC
 
       // reset retries because we got a valid response.
       retries = 10;
     } catch {
       retries--;
       if (retries <= 0) process.exit(0);
-      console.log(`Lost connection to Streamer Tools, retrying ${retries} more times...`);
+      console.log(
+        `Lost connection to Streamer Tools, retrying ${retries} more times...`
+      );
     }
   }, 1000 * 1);
 })();

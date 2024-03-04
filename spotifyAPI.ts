@@ -13,30 +13,34 @@ let authToken = "";
 export const getAlbumCoverFromSongName = async (
   songName: string,
   forceReauth?: boolean
-) => {
-  if (!authToken || forceReauth) {
-    const req = await fetch(authRoute, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Basic ${auth}`
-      },
-      body: `grant_type=client_credentials`
-    });
-    const res = await req.json();
-    authToken = res.access_token;
-  }
-
-  const albumReq = await fetch(trackRoute + songName, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${authToken}`
+): Promise<string | undefined> => {
+  try {
+    if (!authToken || forceReauth) {
+      const req = await fetch(authRoute, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Basic ${auth}`
+        },
+        body: `grant_type=client_credentials`
+      });
+      const res = await req.json();
+      authToken = res.access_token;
     }
-  });
-  if (!albumReq.ok) return getAlbumCoverFromSongName(songName, true);
-  const albumRes = await albumReq.json();
-  const trackItems = albumRes.tracks.items;
-  const firstItem = trackItems[0] ?? undefined;
-  if (!firstItem) return undefined;
-  return firstItem.album.images[0].url;
+
+    const albumReq = await fetch(trackRoute + songName, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
+    });
+    if (!albumReq.ok) return getAlbumCoverFromSongName(songName, true);
+    const albumRes = await albumReq.json();
+    const trackItems = albumRes.tracks.items;
+    const firstItem = trackItems[0] ?? undefined;
+    if (!firstItem) return undefined;
+    return firstItem.album.images[0].url;
+  } catch {
+    return undefined;
+  }
 };
