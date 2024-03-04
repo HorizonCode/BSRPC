@@ -20,6 +20,14 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
 
   //TODO: Add other actions, see location.ts
 
+  const useBeatsaverCover = response.coverFetchable &&
+    response.id.startsWith("custom_level_");
+  const coverURL = useBeatsaverCover
+    ? `https://cdn.beatsaver.com/${
+      response.id.split("_", 3)[2].toLowerCase()
+    }.jpg`
+    : "beatsaber";
+
   updatePresence({
     details: isPlaying
       ? `${
@@ -33,6 +41,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
         )
       }]`
       : `Browsing in ${locationToString(response.location)}...`,
+    largeImageKey: isPlaying ? coverURL : "beatsaber",
   });
 };
 
