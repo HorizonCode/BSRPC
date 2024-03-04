@@ -1,3 +1,4 @@
+import { Location } from "./location.js";
 import {
   StreamerToolsDataResponse,
   StreamerToolsInfoResponse
@@ -49,11 +50,9 @@ export const intToDiff = (diff: number): string => {
 
 export const locationToString = (loc: number): string => {
   switch (loc) {
-    case 0:
+    case Location.MENU:
       return "Song Select";
-    case 1:
-      return "Playing";
-    case 6:
+    case Location.OPTIONS:
       return "Settings";
   }
 };

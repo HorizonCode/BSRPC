@@ -21,6 +21,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
 
   const formattedEndTime = endTimeDate.toISOString().substring(14, 19);
 
+  //TODO: Add other actions, see location.ts
 
   updatePresence({
     details: isPlaying
