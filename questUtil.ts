@@ -7,26 +7,21 @@ import {
 export const getStreamerToolData = async (opts: {
   host: string;
   port: string;
-}): Promise<StreamerToolsDataResponse | undefined> => {
-  try {
-    const fetchReq = await fetch(`http://${opts.host}:${opts.port}/data`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      }
-    });
-    return await fetchReq.json();
-  } catch {
-    return undefined;
-  }
+}): Promise<StreamerToolsDataResponse> => {
+  const fetchReq = await fetch(`http://${opts.host}:${opts.port}/data`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    }
+  });
+  return await fetchReq.json();
 };
 
 export const getStreamerTooInfo = async (opts: {
   host: string;
   port: string;
-}): Promise<StreamerToolsInfoResponse | undefined> => {
-  try {
+}): Promise<StreamerToolsInfoResponse> => {
     const fetchReq = await fetch(`http://${opts.host}:${opts.port}/data`, {
       method: "GET",
       headers: {
@@ -35,9 +30,6 @@ export const getStreamerTooInfo = async (opts: {
       }
     });
     return await fetchReq.json();
-  } catch {
-    return undefined;
-  }
 };
 
 export const intToDiff = (diff: number): string => {
