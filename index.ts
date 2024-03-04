@@ -19,9 +19,8 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   const formattedEndTime = getFormattedTimeFromSeconds(response.endTime);
 
   //TODO: Add other actions, see location.ts
-
-  const useBeatsaverCover = response.coverFetchable &&
-    response.id.startsWith("custom_level_");
+  const isCustomLevel = response.id.startsWith("custom_level_");
+  const useBeatsaverCover = response.coverFetchable && isCustomLevel;
   const coverURL = useBeatsaverCover
     ? `https://cdn.beatsaver.com/${
       response.id.split("_", 3)[2].toLowerCase()
@@ -42,6 +41,10 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
       }]`
       : `Browsing in ${locationToString(response.location)}...`,
     largeImageKey: isPlaying ? coverURL : "beatsaber",
+    smallImageKey: isPlaying && isCustomLevel ? "info" : undefined,
+    smallImageText: isPlaying && isCustomLevel
+      ? `Level by ${response.levelAuthor}`
+      : undefined,
   });
 };
 
