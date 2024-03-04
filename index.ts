@@ -61,6 +61,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
         )}]`
       : `Browsing in ${locationToString(response.location)}...`,
     largeImageKey: isPlaying ? coverURL : "beatsaber",
+    largeImageText: isPlaying ? `${response.songAuthor} - ${response.levelName}` : "Beat Saber",
     smallImageKey: isPlaying && isCustomLevel ? "info" : undefined,
     smallImageText:
       isPlaying && isCustomLevel ? `Map by ${response.levelAuthor}` : undefined
