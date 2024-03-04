@@ -6,7 +6,6 @@ import {
   locationToString
 } from "./questUtil.js";
 import { StreamerToolsDataResponse } from "./types.js";
-import { config } from "dotenv";
 import { getFormattedTimeFromSeconds } from "./timeUtil.js";
 import { getAlbumCoverFromSongName } from "./spotifyAPI.js";
 import path from "path";
@@ -14,7 +13,6 @@ import { existsSync } from "fs";
 import chalk from "chalk";
 import { readFile } from "fs/promises";
 import { runSetup } from "./setup.js";
-import { Location } from "./location.js";
 
 const configFile = path.join(process.cwd(), "bsrpc.json");
 
@@ -72,7 +70,6 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
 (async () => {
   const configCheck = existsSync(configFile);
   if (!configCheck) {
-    // TODO: setup
     console.log(chalk.redBright("Running setup..."));
     if (!(await runSetup(configFile))) return;
   }
