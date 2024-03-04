@@ -49,8 +49,10 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
     "Checking connection to Streamer Tools...",
   ).start();
 
+  let testStreamerToolData;
+
   try {
-    await getStreamerToolData({ host, port });
+    testStreamerToolData = await getStreamerToolData({ host, port });
     firstInitCheck.succeed("Successfully connected to Streamer Tools.");
   } catch {
     firstInitCheck.fail("Error, could not connect to Streamer Tools.");
@@ -71,6 +73,9 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
     process.exit(0);
   }
 
+  // Update the RPC on init by just using the first test response.
+  updateRPC(testStreamerToolData);
+
   setInterval(async () => {
     try {
       const response = await getStreamerToolData({ host, port });
@@ -83,5 +88,5 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
       if (retries <= 0) process.exit(0);
       console.log(`Error, retrying ${retries} more times...`);
     }
-  }, 1000 * 3);
+  }, 1000 * 1);
 })();

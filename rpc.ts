@@ -3,6 +3,8 @@ import * as DiscordRPC from "discord-rpc";
 let rpcClient: DiscordRPC.Client | undefined;
 const clientId = "1213941177951191130";
 
+let lastRPCUpdate = 0;
+
 export const emptyString = "  ";
 
 const data: DiscordRPC.Presence = {
@@ -14,13 +16,13 @@ const data: DiscordRPC.Presence = {
   smallImageText: "  ",
   endTimestamp: undefined,
   startTimestamp: Date.now(),
-  instance: false
+  instance: false,
 };
 
 export const connectIPC = async () => {
   if (rpcClient) return;
   const tempClient = (rpcClient = new DiscordRPC.Client({
-    transport: "ipc"
+    transport: "ipc",
   }));
   return (rpcClient = await tempClient.login({ clientId }));
 };
@@ -31,5 +33,7 @@ export const updatePresence = (newData: Partial<typeof data>) => {
     data[key] = newData[key] || emptyString;
   }
 
+  if (Date.now() - lastRPCUpdate <= 1000) return;
+  lastRPCUpdate = Date.now();
   rpcClient.setActivity(data);
 };
