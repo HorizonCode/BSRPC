@@ -1,8 +1,13 @@
 import ora from "ora";
 import { connectIPC, updatePresence } from "./rpc.js";
-import { getStreamerToolData, intToDiff, locationToString } from "./questUtil.js";
+import {
+  getStreamerToolData,
+  intToDiff,
+  locationToString,
+} from "./questUtil.js";
 import { StreamerToolsDataResponse } from "./types.js";
 import { config } from "dotenv";
+import { getFormattedTimeFromSeconds } from "./timeUtil.js";
 
 config();
 
@@ -10,30 +15,24 @@ let retries = 3;
 
 const updateRPC = async (response: StreamerToolsDataResponse) => {
   const isPlaying = response.location == 1;
-
-  const currentTimeDate = new Date(0);
-  currentTimeDate.setSeconds(response.time);
-
-  const formattedCurrentTime = currentTimeDate.toISOString().substring(14, 19);
-
-  const endTimeDate = new Date(0);
-  endTimeDate.setSeconds(response.endTime);
-
-  const formattedEndTime = endTimeDate.toISOString().substring(14, 19);
+  const formattedCurrentTime = getFormattedTimeFromSeconds(response.time);
+  const formattedEndTime = getFormattedTimeFromSeconds(response.endTime);
 
   //TODO: Add other actions, see location.ts
 
   updatePresence({
     details: isPlaying
       ? `${
-          response.paused ? "Paused" : "Playing..."
-        } (${formattedCurrentTime}/${formattedEndTime})`
+        response.paused ? "Paused" : "Playing..."
+      } (${formattedCurrentTime}/${formattedEndTime})`
       : "Idle...",
     state: isPlaying
-      ? `${response.songAuthor} - ${response.levelName} [${intToDiff(
-          response.difficulty
-        )}]`
-      : `Browsing in ${locationToString(response.location)}...`
+      ? `${response.songAuthor} - ${response.levelName} [${
+        intToDiff(
+          response.difficulty,
+        )
+      }]`
+      : `Browsing in ${locationToString(response.location)}...`,
   });
 };
 
@@ -47,7 +46,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   }
 
   const firstInitCheck = ora(
-    "Checking connection to Streamer Tools..."
+    "Checking connection to Streamer Tools...",
   ).start();
 
   try {
