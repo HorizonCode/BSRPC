@@ -1,24 +1,26 @@
 import ora from "ora";
-import { connectIPC, updatePresence } from "./rpc.js";
+import { connectIPC, updatePresence } from "./discord/presence.js";
 import {
   getStreamerToolData,
   intToDiff,
-  locationToString
-} from "./questUtil.js";
-import { StreamerToolsDataResponse } from "./types.js";
-import { getFormattedTimeFromSeconds } from "./timeUtil.js";
-import { getAlbumCoverFromSongName } from "./spotifyAPI.js";
+  locationToString,
+} from "./utils/questUtil.js";
+import { StreamerToolsDataResponse } from "./types/responses.js";
+import { getFormattedTimeFromSeconds } from "./utils/timeUtil.js";
+import { getAlbumCoverFromSongName } from "./utils/spotifyUtil.js";
 import path from "path";
 import { existsSync } from "fs";
 import chalk from "chalk";
 import { readFile } from "fs/promises";
-import { runSetup } from "./setup.js";
+import { runSetupWizard } from "./setup/wizard.js";
 
 const configFile = path.join(process.cwd(), "bsrpc.json");
-
 const imageCache = new Map<string, string>();
 
-let retries = 3;
+const timeout = {
+  retries: 3,
+  maxRetries: 3,
+};
 
 const updateRPC = async (response: StreamerToolsDataResponse) => {
   const isPlaying = response.location == 1;
@@ -33,16 +35,18 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   if (response.levelName && response.levelName.length > 0) {
     if (isCustomLevel) {
       coverURL = useBeatsaverCover
-        ? `https://cdn.beatsaver.com/${response.id
+        ? `https://cdn.beatsaver.com/${
+          response.id
             .split("_", 3)[2]
-            .toLowerCase()}.jpg`
+            .toLowerCase()
+        }.jpg`
         : "beatsaber";
     } else {
       if (imageCache.has(response.levelName)) {
         coverURL = imageCache.get(response.levelName);
       } else {
         const fetchedCover = await getAlbumCoverFromSongName(
-          `${response.songAuthor} ${response.levelName}`
+          `${response.songAuthor} ${response.levelName}`,
         );
         imageCache.set(response.levelName, fetchedCover ?? "beatsaber"); // use default as fallback
       }
@@ -52,19 +56,24 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   updatePresence({
     details: isPlaying
       ? `${
-          response.paused ? "Paused" : "Playing..."
-        } (${formattedCurrentTime}/${formattedEndTime})`
+        response.paused ? "Paused" : "Playing..."
+      } (${formattedCurrentTime}/${formattedEndTime})`
       : "Idle...",
     state: isPlaying
-      ? `${response.songAuthor} - ${response.levelName} [${intToDiff(
-          response.difficulty
-        )}]`
+      ? `${response.songAuthor} - ${response.levelName} [${
+        intToDiff(
+          response.difficulty,
+        )
+      }]`
       : `Browsing in ${locationToString(response.location)}...`,
     largeImageKey: isPlaying ? coverURL : "beatsaber",
-    largeImageText: isPlaying ? `${response.songAuthor} - ${response.levelName}` : "Beat Saber",
+    largeImageText: isPlaying
+      ? `${response.songAuthor} - ${response.levelName}`
+      : "Beat Saber",
     smallImageKey: isPlaying && isCustomLevel ? "info" : undefined,
-    smallImageText:
-      isPlaying && isCustomLevel ? `Map by ${response.levelAuthor}` : undefined
+    smallImageText: isPlaying && isCustomLevel
+      ? `Map by ${response.levelAuthor}`
+      : undefined,
   });
 };
 
@@ -72,7 +81,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   const configCheck = existsSync(configFile);
   if (!configCheck) {
     console.log(chalk.redBright("Running setup..."));
-    if (!(await runSetup(configFile))) return;
+    if (!(await runSetupWizard(configFile))) return;
   }
 
   const configData = await readFile(configFile, "utf8");
@@ -87,7 +96,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   }
 
   const firstInitCheck = ora(
-    "Checking connection to Streamer Tools..."
+    "Checking connection to Streamer Tools...",
   ).start();
 
   let testStreamerToolData: StreamerToolsDataResponse | undefined = undefined;
@@ -123,12 +132,12 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
       if (response) updateRPC(response); // update the Discord RPC
 
       // reset retries because we got a valid response.
-      retries = 10;
+      timeout.retries = timeout.maxRetries;
     } catch {
-      retries--;
-      if (retries <= 0) process.exit(0);
+      timeout.retries--;
+      if (timeout.retries <= 0) process.exit(0);
       console.log(
-        `Lost connection to Streamer Tools, retrying ${retries} more times...`
+        `Lost connection to Streamer Tools, retrying ${timeout.retries} more times...`,
       );
     }
   }, 1000 * 1);

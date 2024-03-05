@@ -1,6 +1,6 @@
 const client = {
   id: "3f974573800a4ff5b325de9795b8e603",
-  secret: "ff188d2860ff44baa57acc79c121a3b9"
+  secret: "ff188d2860ff44baa57acc79c121a3b9",
 };
 
 const authRoute = "https://accounts.spotify.com/api/token";
@@ -12,7 +12,7 @@ let authToken = "";
 
 export const getAlbumCoverFromSongName = async (
   songName: string,
-  forceReauth?: boolean
+  forceReauth?: boolean,
 ): Promise<string | undefined> => {
   try {
     if (!authToken || forceReauth) {
@@ -20,9 +20,9 @@ export const getAlbumCoverFromSongName = async (
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Basic ${auth}`
+          Authorization: `Basic ${auth}`,
         },
-        body: `grant_type=client_credentials`
+        body: `grant_type=client_credentials`,
       });
       const res = await req.json();
       authToken = res.access_token;
@@ -31,8 +31,8 @@ export const getAlbumCoverFromSongName = async (
     const albumReq = await fetch(trackRoute + songName, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${authToken}`
-      }
+        Authorization: `Bearer ${authToken}`,
+      },
     });
     if (!albumReq.ok) return getAlbumCoverFromSongName(songName, true);
     const albumRes = await albumReq.json();

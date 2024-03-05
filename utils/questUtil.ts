@@ -1,8 +1,8 @@
-import { Location } from "./location.js";
+import { Location } from "../enums/location.js";
 import {
   StreamerToolsDataResponse,
-  StreamerToolsInfoResponse
-} from "./types.js";
+  StreamerToolsInfoResponse,
+} from "../types/responses.js";
 
 export const getStreamerToolData = async (opts: {
   host: string;
@@ -12,24 +12,24 @@ export const getStreamerToolData = async (opts: {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json"
-    }
+      Accept: "application/json",
+    },
   });
   return await fetchReq.json();
 };
 
-export const getStreamerTooInfo = async (opts: {
+export const getStreamerToolInfo = async (opts: {
   host: string;
   port: string;
 }): Promise<StreamerToolsInfoResponse> => {
-    const fetchReq = await fetch(`http://${opts.host}:${opts.port}/data`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      }
-    });
-    return await fetchReq.json();
+  const fetchReq = await fetch(`http://${opts.host}:${opts.port}/data`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  });
+  return await fetchReq.json();
 };
 
 export const intToDiff = (diff: number): string => {
