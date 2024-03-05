@@ -9,13 +9,13 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/HorizonCode/BSRPC)
 ![GitHub forks](https://img.shields.io/github/forks/HorizonCode/BSRPC)
 
-This program allows you to display your current Beat Saber gameplay status on Discord using the Streamer Tools Mod for the Quest version of Beat Saber.
+This program allows you to display your current Beat Saber gameplay status on Discord using the Streamer Tools for the Quest version of Beat Saber.
 
 ## Requirements
 
 - Node.js 20 and above
 - [NodeJS Build Tools](#install-build-tools) (for executeable generation)
-- Beat Saber 1.28.x with Streamer Tools Mod installed on your Oculus Quest
+- Beat Saber 1.28.x with [Streamer Tools](https://github.com/EnderdracheLP/streamer-tools) installed on your Oculus Quest
 - Discord account
 - Local network IP address of your Oculus Quest
 
@@ -64,4 +64,4 @@ Install-BoxstarterPackage https://raw.githubusercontent.com/nodejs/node/master/t
 
 ## Credits
 
-This program utilizes the Streamer Tools Mod for Beat Saber created by EnderdracheLP. Without their efforts, this project would not be possible.
+This program utilizes [Streamer Tools](https://github.com/EnderdracheLP/streamer-tools) for Beat Saber created by [EnderdracheLP](https://github.com/EnderdracheLP). Without their efforts, this project would not be possible.
