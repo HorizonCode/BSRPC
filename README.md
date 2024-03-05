@@ -1,5 +1,10 @@
 # BSRPC - Beat Saber Discord Presence
 
+![GitHub last commit](https://img.shields.io/github/last-commit/HorizonCode/BSRPC?style=flat-square)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/HorizonCode/BSRPC?style=flat-square)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/HorizonCode/BSRPC?style=flat-square)
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/HorizonCode/BSRPC/latest?style=flat-square)
+
 This program allows you to display your current Beat Saber gameplay status on Discord using the Streamer Tools Mod for the Quest version of Beat Saber.
 
 ## Requirements
