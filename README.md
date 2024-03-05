@@ -10,6 +10,7 @@ This program allows you to display your current Beat Saber gameplay status on Di
 ## Requirements
 
 - Node.js 20 and above
+- [C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (for executeable generation)
 - Beat Saber 1.28.x
 - Beat Saber Streamer Tools Mod installed on your Oculus Quest
 - Discord account
