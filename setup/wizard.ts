@@ -3,20 +3,14 @@ import enquirer from "enquirer";
 import ora from "ora";
 import { getStreamerToolInfo } from "../utils/questUtil.js";
 import { writeFile } from "fs/promises";
+import { ipRegex } from "../utils/regexUtil.js";
 
 export const runSetupWizard = async (configPath: string) => {
-  console.log(
-    chalk.yellowBright(
-      "You will now enter some information about your Quest, be sure to have Beat Saber open on your Quest!",
-    ),
-  );
   const { quest_ip }: Record<string, string> = await enquirer.prompt({
     type: "text",
     name: "quest_ip",
     message: chalk.italic.gray(`Please enter your Quests Local IP Address:`),
     validate: (value: string) => {
-      const ipRegex =
-        /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
       return ipRegex.test(value) ? true : "Please enter a valid IP Address";
     },
   });
