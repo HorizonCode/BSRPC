@@ -10,7 +10,7 @@ This program allows you to display your current Beat Saber gameplay status on Di
 ## Requirements
 
 - Node.js 20 and above
-- [C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (for executeable generation)
+- [NodeJS Build Tools](#install-build-tools) (for executeable generation)
 - Beat Saber 1.28.x
 - Beat Saber Streamer Tools Mod installed on your Oculus Quest
 - Discord account
@@ -19,6 +19,18 @@ This program allows you to display your current Beat Saber gameplay status on Di
 ## Download
 
 Check the [releases](https://github.com/HorizonCode/BSRPC/releases) page for the latest version of BSRPC
+
+## Install Build Tools
+
+1. Open a Powershell with Administrative permissions
+2. Run the following commands:
+
+```ps
+Set-ExecutionPolicy Unrestricted -Force
+iex ((New-Object System.Net.WebClient).DownloadString('https://boxstarter.org/bootstrapper.ps1'))
+get-boxstarter -Force
+Install-BoxstarterPackage https://raw.githubusercontent.com/nodejs/node/master/tools/bootstrap/windows_boxstarter -DisableReboots
+```
 
 ## Building from source
 
