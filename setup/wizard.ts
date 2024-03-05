@@ -32,6 +32,6 @@ export const runSetupWizard = async (configPath: string) => {
     checkIP.fail(
       "Error, could not connect to your Quest, please check your IP Address and try again.",
     );
-    process.exit(0);
+    return await runSetupWizard(configPath);
   }
 };
