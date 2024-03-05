@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsx index.ts",
-    "compile": "ncc build index.ts && nexe --build --cwd dist"
+    "compile": "ncc build index.ts && nexe --build --verbose --cwd dist"
   },
   "keywords": [],
   "author": "",
