@@ -18,7 +18,7 @@ import { ipRegex } from "./utils/regexUtil.js";
 
 const appInfo = {
   name: "BSRPC",
-  version: "0.0.1",
+  version: "0.1.0",
   author: "HorizonCode",
 };
 
