@@ -14,10 +14,12 @@ import chalk from "chalk";
 import { readFile } from "fs/promises";
 import { runSetupWizard } from "./setup/wizard.js";
 import { setTerminalTitle } from "./utils/terminalUtil.js";
+import { ipRegex } from "./utils/regexUtil.js";
 
 const appInfo = {
   name: "BSRPC",
   version: "0.0.1",
+  author: "HorizonCode",
 };
 
 const configFile = path.join(process.cwd(), "bsrpc.json");
@@ -83,11 +85,35 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   });
 };
 
+const printInfo = () => {
+  console.log(chalk.cyanBright.bold(`    ____ _____ ____  ____  ______
+   / __ ) ___// __ \\/ __ \\/ ____/
+  / __  \\__ \\/ /_/ / /_/ / /     
+ / /_/ /__/ / _, _/ ____/ /___   
+/_____/____/_/ |_/_/    \\____/`));
+  console.log(
+    chalk.gray(`- Version: ${chalk.cyan.bold(appInfo.version)}`),
+  );
+  console.log(
+    chalk.gray(
+      `- Made with ${chalk.red.italic.bold("<3")} by ${
+        chalk.cyan.bold(appInfo.author)
+      }\n\n${chalk.gray.italic("---------------------------------------")}\n`,
+    ),
+  );
+};
+
 (async () => {
   setTerminalTitle(`${appInfo.name} ${appInfo.version}`);
+  printInfo();
   const configCheck = existsSync(configFile);
   if (!configCheck) {
     console.log(chalk.redBright("Running setup..."));
+    console.log(
+      chalk.yellowBright(
+        "You will now enter some information about your Quest, be sure to have Beat Saber open on your Quest!",
+      ),
+    );
     if (!(await runSetupWizard(configFile))) return;
   }
 
@@ -98,7 +124,14 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   const port = "53502";
 
   if (host.length <= 0) {
-    console.log("You must set the quest_ip in the config file.");
+    console.log(
+      chalk.redBright("✖ You must set the quest_ip in the config file."),
+    );
+    process.exit(0);
+  }
+
+  if (!ipRegex.test(host)) {
+    console.log(chalk.redBright("✖ Invalid IP Address in config file."));
     process.exit(0);
   }
 
@@ -144,7 +177,9 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
       timeout.retries--;
       if (timeout.retries <= 0) process.exit(0);
       console.log(
-        `Lost connection to Streamer Tools, retrying ${timeout.retries} more times...`,
+        chalk.yellow(
+          `Lost connection to Streamer Tools, retrying ${timeout.retries} more times...`,
+        ),
       );
     }
   }, 1000 * 1);
