@@ -10,34 +10,35 @@ This program allows you to display your current Beat Saber gameplay status on Di
 - Discord account
 - Local network IP address of your Oculus Quest
 
-## Installation
+## Download
+
+Check the [releases](https://github.com/HorizonCode/BSRPC/releases) page for the latest version of BSRPC
+
+## Building from source
 
 1. Clone or download this repository to your local machine.
 2. Navigate to the directory where you downloaded the repository.
 3. Install the necessary Node.js packages by running:
    ```
-   npm install
+   npm i
    ```
-4. Inside the `.env` file, add your Oculus Quest's local network IP address in the following format:
+4. Build the executeable by running:
    ```
-   QUEST_IP=YOUR_QUEST_IP_ADDRESS
+   npm run compile
    ```
-   Replace `YOUR_QUEST_IP_ADDRESS` with the actual IP address of your Oculus Quest.
-6. Save the `.env` file.
+5. The executeable should be located at `dist/dist.exe`.
 
 ## Usage
 
 1. Make sure your Oculus Quest is connected to the same local network as your computer.
 2. Start Beat Saber on your Oculus Quest.
-3. Start the Discord presence program by running:
-   ```
-   npm start
-   ```
-4. The program will now connect to Beat Saber and Discord, and your Beat Saber gameplay status will be displayed on Discord.
+3. Start BSRPC, a console window will open.
+4. If a config file does not exist, it will guide you though the setup process.
+5. The program will now connect to Beat Saber and Discord, and your Beat Saber gameplay status will be displayed on Discord.
 
 ## Troubleshooting
 
-- If the program fails to connect to Beat Saber or Discord, double-check your `.env` file for any typos in the IP address.
+- If the program fails to connect to Beat Saber or Discord, double-check your `bsrpc.json` file for any typos in the IP address.
 - Ensure that your Oculus Quest is connected to the same local network as your computer and that the Streamer Tools Mod is running in Beat Saber.
 
 ## Credits
