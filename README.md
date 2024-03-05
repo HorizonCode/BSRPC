@@ -11,8 +11,7 @@ This program allows you to display your current Beat Saber gameplay status on Di
 
 - Node.js 20 and above
 - [NodeJS Build Tools](#install-build-tools) (for executeable generation)
-- Beat Saber 1.28.x
-- Beat Saber Streamer Tools Mod installed on your Oculus Quest
+- Beat Saber 1.28.x with Streamer Tools Mod installed on your Oculus Quest
 - Discord account
 - Local network IP address of your Oculus Quest
 
