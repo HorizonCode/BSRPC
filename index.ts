@@ -13,6 +13,12 @@ import { existsSync } from "fs";
 import chalk from "chalk";
 import { readFile } from "fs/promises";
 import { runSetupWizard } from "./setup/wizard.js";
+import { setTerminalTitle } from "./utils/terminalUtil.js";
+
+const appInfo = {
+  name: "BSRPC",
+  version: "0.0.1",
+};
 
 const configFile = path.join(process.cwd(), "bsrpc.json");
 const imageCache = new Map<string, string>();
@@ -78,6 +84,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
 };
 
 (async () => {
+  setTerminalTitle(`${appInfo.name} ${appInfo.version}`);
   const configCheck = existsSync(configFile);
   if (!configCheck) {
     console.log(chalk.redBright("Running setup..."));
