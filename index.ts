@@ -42,12 +42,9 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
 
   if (response.levelName && response.levelName.length > 0) {
     if (isCustomLevel) {
+      const customLevelId = response.id.split("_", 3)[2].toLowerCase();
       coverURL = useBeatsaverCover
-        ? `https://cdn.beatsaver.com/${
-          response.id
-            .split("_", 3)[2]
-            .toLowerCase()
-        }.jpg`
+        ? `https://cdn.beatsaver.com/${customLevelId}.jpg`
         : "beatsaber";
     } else {
       if (imageCache.has(response.levelName)) {
