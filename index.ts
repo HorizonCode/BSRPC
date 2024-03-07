@@ -5,7 +5,7 @@ import { getFormattedTimeFromSeconds } from "./utils/timeUtil";
 import { getAlbumCoverFromSongName } from "./utils/spotifyUtil";
 import { runSetupWizard } from "./setup/wizard";
 import { setTerminalTitle } from "./utils/terminalUtil";
-import { ipRegex } from "./utils/regexUtil";
+import { ipRegex, portRegex } from "./utils/regexUtil";
 import chalk from "chalk";
 import ora from "ora";
 import { supressExperimentalWarning } from "./utils/warnUtil";
@@ -15,20 +15,20 @@ import { diffToString, locationToString } from "./utils/beatsaberUtil";
 supressExperimentalWarning();
 
 const config = new Config({
-  name: "bsrpc",
+  name: "bsrpc"
 });
 
 const appInfo = {
   name: "BSRPC",
   version: "0.1.1",
-  author: "HorizonCode",
+  author: "HorizonCode"
 };
 
 const imageCache = new Map<string, string>();
 
 const timeout = {
   retries: 3,
-  maxRetries: 3,
+  maxRetries: 3
 };
 
 const updateRPC = async (response: StreamerToolsDataResponse) => {
@@ -52,7 +52,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
         coverURL = imageCache.get(response.levelName);
       } else {
         const fetchedCover = await getAlbumCoverFromSongName(
-          `${response.songAuthor} ${response.levelName}`,
+          `${response.songAuthor} ${response.levelName}`
         );
         imageCache.set(response.levelName, fetchedCover ?? "beatsaber"); // use default as fallback
       }
@@ -62,42 +62,39 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
   updatePresence({
     details: isPlaying
       ? `${
-        response.paused ? "Paused" : "Playing..."
-      } (${formattedCurrentTime}/${formattedEndTime})`
+          response.paused ? "Paused" : "Playing..."
+        } (${formattedCurrentTime}/${formattedEndTime})`
       : "Idle...",
     state: isPlaying
-      ? `${response.songAuthor} - ${response.levelName} [${
-        diffToString(
-          response.difficulty,
-        )
-      }]`
+      ? `${response.songAuthor} - ${response.levelName} [${diffToString(
+          response.difficulty
+        )}]`
       : `Browsing in ${locationToString(response.location)}...`,
     largeImageKey: isPlaying ? coverURL : "beatsaber",
     largeImageText: isPlaying
       ? `${response.songAuthor} - ${response.levelName}`
       : "Beat Saber",
     smallImageKey: isPlaying && isCustomLevel ? "info" : undefined,
-    smallImageText: isPlaying && isCustomLevel
-      ? `Map by ${response.levelAuthor}`
-      : undefined,
+    smallImageText:
+      isPlaying && isCustomLevel ? `Map by ${response.levelAuthor}` : undefined
   });
 };
 
 const printInfo = () => {
-  console.log(chalk.cyanBright.bold(`    ____ _____ ____  ____  ______
+  console.log(
+    chalk.cyanBright.bold(`    ____ _____ ____  ____  ______
    / __ ) ___// __ \\/ __ \\/ ____/
   / __  \\__ \\/ /_/ / /_/ / /
  / /_/ /__/ / _, _/ ____/ /___
-/_____/____/_/ |_/_/    \\____/`));
-  console.log(
-    chalk.gray(`- Version: ${chalk.cyan.bold(appInfo.version)}`),
+/_____/____/_/ |_/_/    \\____/`)
   );
+  console.log(chalk.gray(`- Version: ${chalk.cyan.bold(appInfo.version)}`));
   console.log(
     chalk.gray(
-      `- Made with ${chalk.red.italic.bold("<3")} by ${
-        chalk.cyan.bold(appInfo.author)
-      }\n\n${chalk.gray.italic("---------------------------------------")}\n`,
-    ),
+      `- Made with ${chalk.red.italic.bold("<3")} by ${chalk.cyan.bold(
+        appInfo.author
+      )}\n\n${chalk.gray.italic("---------------------------------------")}\n`
+    )
   );
 };
 
@@ -108,20 +105,20 @@ const printInfo = () => {
     console.log(chalk.redBright("Running setup..."));
     console.log(
       chalk.yellowBright(
-        "You will now enter some information about your Quest, be sure to have Beat Saber open on your Quest!",
-      ),
+        "You will now enter some information about your Quest, be sure to have Beat Saber open on your Quest!"
+      )
     );
     if (!(await runSetupWizard(config))) return;
   }
 
   await config.load();
 
-  const host = config.get("quest_ip") as string ?? "";
-  const port = config.get("st_port") as string ?? "53502";
+  const host = (config.get("quest_ip") as string) ?? "";
+  const port = (config.get("st_port") as string) ?? "53502";
 
   if (host.length <= 0) {
     console.log(
-      chalk.redBright("✖ You must set the quest_ip in the config file."),
+      chalk.redBright("✖ You must set the quest_ip in the config file.")
     );
     process.exit(0);
   }
@@ -131,8 +128,13 @@ const printInfo = () => {
     process.exit(0);
   }
 
+  if (!portRegex.test(port)) {
+    console.log(chalk.redBright("✖ Invalid Port in config file."));
+    process.exit(0);
+  }
+
   const firstInitCheck = ora(
-    "Checking connection to Streamer Tools...",
+    "Checking connection to Streamer Tools..."
   ).start();
 
   let testStreamerToolData: StreamerToolsDataResponse | undefined = undefined;
@@ -174,8 +176,8 @@ const printInfo = () => {
       if (timeout.retries <= 0) process.exit(0);
       console.log(
         chalk.yellow(
-          `Lost connection to Streamer Tools, retrying ${timeout.retries} more times...`,
-        ),
+          `Lost connection to Streamer Tools, retrying ${timeout.retries} more times...`
+        )
       );
     }
   }, 1000 * 1);
