@@ -26,12 +26,6 @@ export const runSetupWizard = async (config: Config) => {
       "Do you want to enter your Quests IP Address and Port manually or use the auto-discovery feature?",
     name: "resolve_type",
     choices: setupTypes,
-    validate: (value: string) => {
-      if (value == setupTypes[0].name) {
-        return "Auto-Discovery is not yet implemented!";
-      }
-      return true;
-    },
   }]);
   if (resolve_type == setupTypes[0].name) {
     const resolved = await resolveQuestFromLocalNetwork();
