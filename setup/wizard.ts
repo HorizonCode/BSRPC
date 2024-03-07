@@ -10,7 +10,7 @@ import { Config } from "../config/config";
 
 const setupTypes = [
   {
-    name: "Auto-Discovery (not yet implemented)",
+    name: "Auto-Discovery",
     value: "auto",
   },
   {
