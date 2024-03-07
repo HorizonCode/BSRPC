@@ -15,6 +15,9 @@ import { setTerminalTitle } from "./utils/terminalUtil.js";
 import { ipRegex } from "./utils/regexUtil.js";
 import chalk from "chalk";
 import ora from "ora";
+import { supressExperimentalWarning } from "./utils/warnUtil.js";
+
+supressExperimentalWarning();
 
 const appInfo = {
   name: "BSRPC",
