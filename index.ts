@@ -18,7 +18,7 @@ import ora from "ora";
 
 const appInfo = {
   name: "BSRPC",
-  version: "0.1.0",
+  version: "0.1.1",
   author: "HorizonCode",
 };
 
