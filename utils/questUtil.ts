@@ -54,5 +54,7 @@ export const locationToString = (loc: number): string => {
       return "Song Select";
     case Location.OPTIONS:
       return "Settings";
+    default:
+      return "Unknown";
   }
 };

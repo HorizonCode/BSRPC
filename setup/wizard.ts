@@ -1,12 +1,12 @@
-import chalk from "chalk";
-import enquirer from "enquirer";
-import ora from "ora";
 import { getStreamerToolInfo } from "../utils/questUtil.js";
 import { writeFile } from "fs/promises";
 import { ipRegex } from "../utils/regexUtil.js";
+import chalk from "chalk";
+import Enquirer from "enquirer";
+import ora from "ora";
 
 export const runSetupWizard = async (configPath: string) => {
-  const { quest_ip }: Record<string, string> = await enquirer.prompt({
+  const { quest_ip }: Record<string, string> = await Enquirer.prompt({
     type: "text",
     name: "quest_ip",
     message: chalk.italic.gray(`Please enter your Quests Local IP Address:`),

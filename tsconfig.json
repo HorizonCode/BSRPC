@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "target": "ES6",
-    "moduleResolution": "NodeNext",
+    "target": "es5",
+    "module": "commonjs",
     "outDir": "dist",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   }
 }

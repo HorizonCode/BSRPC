@@ -1,4 +1,3 @@
-import ora from "ora";
 import { connectIPC, updatePresence } from "./discord/presence.js";
 import {
   getStreamerToolData,
@@ -10,11 +9,12 @@ import { getFormattedTimeFromSeconds } from "./utils/timeUtil.js";
 import { getAlbumCoverFromSongName } from "./utils/spotifyUtil.js";
 import path from "path";
 import { existsSync } from "fs";
-import chalk from "chalk";
 import { readFile } from "fs/promises";
 import { runSetupWizard } from "./setup/wizard.js";
 import { setTerminalTitle } from "./utils/terminalUtil.js";
 import { ipRegex } from "./utils/regexUtil.js";
+import chalk from "chalk";
+import ora from "ora";
 
 const appInfo = {
   name: "BSRPC",
@@ -85,8 +85,8 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
 const printInfo = () => {
   console.log(chalk.cyanBright.bold(`    ____ _____ ____  ____  ______
    / __ ) ___// __ \\/ __ \\/ ____/
-  / __  \\__ \\/ /_/ / /_/ / /     
- / /_/ /__/ / _, _/ ____/ /___   
+  / __  \\__ \\/ /_/ / /_/ / /
+ / /_/ /__/ / _, _/ ____/ /___
 /_____/____/_/ |_/_/    \\____/`));
   console.log(
     chalk.gray(`- Version: ${chalk.cyan.bold(appInfo.version)}`),
