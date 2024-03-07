@@ -1,23 +1,22 @@
 import { connectIPC, updatePresence } from "./discord/presence";
-import {
-  getStreamerToolData,
-  intToDiff,
-  locationToString,
-} from "./utils/questUtil";
+import { getStreamerToolData } from "./utils/questUtil";
 import { StreamerToolsDataResponse } from "./types/responses";
 import { getFormattedTimeFromSeconds } from "./utils/timeUtil";
 import { getAlbumCoverFromSongName } from "./utils/spotifyUtil";
-import path from "path";
-import { existsSync } from "fs";
-import { readFile } from "fs/promises";
 import { runSetupWizard } from "./setup/wizard";
 import { setTerminalTitle } from "./utils/terminalUtil";
 import { ipRegex } from "./utils/regexUtil";
 import chalk from "chalk";
 import ora from "ora";
 import { supressExperimentalWarning } from "./utils/warnUtil";
+import { Config } from "./config/config";
+import { diffToString, locationToString } from "./utils/beatsaberUtil";
 
 supressExperimentalWarning();
+
+const config = new Config({
+  name: "bsrpc",
+});
 
 const appInfo = {
   name: "BSRPC",
@@ -25,7 +24,6 @@ const appInfo = {
   author: "HorizonCode",
 };
 
-const configFile = path.join(process.cwd(), "bsrpc.json");
 const imageCache = new Map<string, string>();
 
 const timeout = {
@@ -69,7 +67,7 @@ const updateRPC = async (response: StreamerToolsDataResponse) => {
       : "Idle...",
     state: isPlaying
       ? `${response.songAuthor} - ${response.levelName} [${
-        intToDiff(
+        diffToString(
           response.difficulty,
         )
       }]`
@@ -106,21 +104,17 @@ const printInfo = () => {
 (async () => {
   setTerminalTitle(`${appInfo.name} ${appInfo.version}`);
   printInfo();
-  const configCheck = existsSync(configFile);
-  if (!configCheck) {
+  if (!config.exists()) {
     console.log(chalk.redBright("Running setup..."));
     console.log(
       chalk.yellowBright(
         "You will now enter some information about your Quest, be sure to have Beat Saber open on your Quest!",
       ),
     );
-    if (!(await runSetupWizard(configFile))) return;
+    if (!(await runSetupWizard(config))) return;
   }
 
-  const configData = await readFile(configFile, "utf8");
-  const configJSON = JSON.parse(configData);
-
-  const host = configJSON["quest_ip"] ?? "";
+  const host = config.get("quest_ip") as string ?? "";
   const port = "53502";
 
   if (host.length <= 0) {
