@@ -1,4 +1,4 @@
-import { Location } from "../enums/location.js";
+import { Location } from "../enums/location";
 import {
   StreamerToolsDataResponse,
   StreamerToolsInfoResponse,

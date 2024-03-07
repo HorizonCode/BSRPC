@@ -1,21 +1,21 @@
-import { connectIPC, updatePresence } from "./discord/presence.js";
+import { connectIPC, updatePresence } from "./discord/presence";
 import {
   getStreamerToolData,
   intToDiff,
   locationToString,
-} from "./utils/questUtil.js";
-import { StreamerToolsDataResponse } from "./types/responses.js";
-import { getFormattedTimeFromSeconds } from "./utils/timeUtil.js";
-import { getAlbumCoverFromSongName } from "./utils/spotifyUtil.js";
+} from "./utils/questUtil";
+import { StreamerToolsDataResponse } from "./types/responses";
+import { getFormattedTimeFromSeconds } from "./utils/timeUtil";
+import { getAlbumCoverFromSongName } from "./utils/spotifyUtil";
 import path from "path";
 import { existsSync } from "fs";
 import { readFile } from "fs/promises";
-import { runSetupWizard } from "./setup/wizard.js";
-import { setTerminalTitle } from "./utils/terminalUtil.js";
-import { ipRegex } from "./utils/regexUtil.js";
+import { runSetupWizard } from "./setup/wizard";
+import { setTerminalTitle } from "./utils/terminalUtil";
+import { ipRegex } from "./utils/regexUtil";
 import chalk from "chalk";
 import ora from "ora";
-import { supressExperimentalWarning } from "./utils/warnUtil.js";
+import { supressExperimentalWarning } from "./utils/warnUtil";
 
 supressExperimentalWarning();
 

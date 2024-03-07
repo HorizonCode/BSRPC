@@ -1,6 +1,6 @@
-import { getStreamerToolInfo } from "../utils/questUtil.js";
+import { getStreamerToolInfo } from "../utils/questUtil";
 import { writeFile } from "fs/promises";
-import { ipRegex } from "../utils/regexUtil.js";
+import { ipRegex } from "../utils/regexUtil";
 import chalk from "chalk";
 import Enquirer from "enquirer";
 import ora from "ora";
