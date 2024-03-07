@@ -1,6 +1,7 @@
 import { Client, Presence } from "discord-rpc";
 
 let rpcClient: Client | undefined;
+let rpcConnected = false;
 const clientId = "1213941177951191130";
 
 let lastRPCUpdate = 0;
@@ -19,14 +20,27 @@ const data: Presence = {
 
 export const connectIPC = async () => {
   if (rpcClient) return;
-  const tempClient = (rpcClient = new Client({
-    transport: "ipc",
-  }));
-  return (rpcClient = await tempClient.login({ clientId }));
+  return new Promise(async (res, rej) => {
+    try {
+      const tempClient = (rpcClient = new Client({
+        transport: "ipc",
+      }));
+      tempClient.on("ready", () => {
+        rpcConnected = true;
+        console.log(
+          "Discord RPC connected with user " + tempClient.user.username,
+        );
+        res(tempClient);
+      });
+      return (rpcClient = await tempClient.login({ clientId }));
+    } catch {
+      rej();
+    }
+  });
 };
 
 export const updatePresence = (newData: Partial<Presence>) => {
-  if (!rpcClient) return;
+  if (!rpcClient || !rpcConnected) return;
   for (const key in newData) {
     data[key] = newData[key] || emptyString;
   }
