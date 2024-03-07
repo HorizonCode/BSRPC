@@ -114,8 +114,10 @@ const printInfo = () => {
     if (!(await runSetupWizard(config))) return;
   }
 
+  await config.load();
+
   const host = config.get("quest_ip") as string ?? "";
-  const port = "53502";
+  const port = config.get("st_port") as string ?? "53502";
 
   if (host.length <= 0) {
     console.log(
