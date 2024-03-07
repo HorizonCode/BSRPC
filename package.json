@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsx index.ts",
-    "compile": "tsc && pkg ./dist/index.js --output ./dist/BSRPC.exe --target node18-win-x64"
+    "compile": "tsc && pkg ./dist/index.js --output ./dist/BSRPC --target node18-win,node18-linux,node18-macos"
   },
   "keywords": [],
   "author": "",
